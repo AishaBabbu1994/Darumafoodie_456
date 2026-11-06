@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daruma y las 10 Semillas 🌰</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fff5f5, #ffe4e1, #f3e5f5);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+  h1 {
+    color: #c62828;
+    margin-bottom: 10px;
+    font-size: 1.8em;
+  }
+  .contador {
+    background: rgba(255,255,255,0.8);
+    padding: 10px 25px;
+    border-radius: 25px;
+    margin: 10px 0;
+    font-size: 1.3em;
+    color: #4a148c;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid #ffcdd2;
+  }
+  .contador span {
+    color: #c62828;
+    font-weight: bold;
+  }
+  .daruma-container {
+    width: 280px;
+    height: 300px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px dashed #ffcdd2;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .daruma-container.activo {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+  .daruma {
+    font-size: 10em;
+    transition: transform 0.3s;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+    animation: balanceo 2s ease-in-out infinite;
+    user-select: none;
+    pointer-events: none;
+  }
+  .daruma.comiendo {
+    animation: comer 0.6s ease;
+  }
+  .daruma.feliz {
+    animation: saltar 0.8s ease infinite;
+  }
+  @keyframes balanceo {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+  @keyframes comer {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.2) rotate(-5deg); }
+    60% { transform: scale(1.15) rotate(5deg); }
+    100% { transform: scale(1); }
+  }
+  @keyframes saltar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  .semillas-container {
+    background: rgba(255,255,255,0.7);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+  }
+  .semillas-titulo {
+    color: #6a1b9a;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+  .semillas {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .semilla {
+    font-size: 2.5em;
+    cursor: grab;
+    transition: all 0.3s;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    padding: 8px;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+  }
+  .semilla:hover {
+    transform: scale(1.2);
+    border-color: #ffd700;
+  }
+  .semilla.comida {
+    opacity: 0.15;
+    cursor: not-allowed;
+    transform: scale(0.7);
+    pointer-events: none;
+  }
+  .mensaje {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #2e7d32;
+    font-weight: bold;
+    min-height: 35px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 15px;
+  }
+  .victoria {
+    background: linear-gradient(45deg, #ffd700, #ff69b4, #c62828);
+    color: white;
+    padding: 25px 30px;
+    border-radius: 20px;
+    font-size: 1.3em;
+    margin-top: 20px;
+    animation: brillar 1.5s ease-in-out infinite;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+  @keyframes brillar {
+    0%, 100% { box-shadow: 0 0 20px #ffd700; }
+    50% { box-shadow: 0 0 40px #ff69b4; }
+  }
+  .btn-reiniciar {
+    margin-top: 15px;
+    padding: 12px 30px;
+    background: #c62828;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 12px rgba(198,40,40,0.3);
+  }
+  .btn-reiniciar:hover {
+    background: #a52a2a;
+  }
+  .instrucciones {
+    background: rgba(255,255,255,0.7);
+    padding: 10px 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    color: #5e35b1;
+    font-size: 0.95em;
+  }
+</style>
+</head>
+<body>
+  <h1>🎎 Daruma Hambriento 🌰</h1>
+  <div class="instrucciones">👆 Arrastra cada semilla 🌰 hasta el círculo del daruma</div>
+  <div class="contador">Semillas: <span id="contador">0</span> / 10</div>
+  
+  <div class="daruma-container" id="zonaDrop">
+    <div class="daruma" id="daruma">🎎</div>
+  </div>
+  
+  <div class="semillas-container">
+    <div class="semillas-titulo">🌰 Arrastra las semillas al daruma:</div>
+    <div class="semillas" id="semillas"></div>
+  </div>
+  
+  <div class="mensaje" id="mensaje">¡Arrastra las semillas hacia el daruma!</div>
+  
+  <div class="victoria" id="victoria">
+    🎉 ¡Daruma está feliz y lleno! 🎉<br>
+    ¡Completaste el juego! 🌸✨🌰
+  </div>
+  
+  <button class="btn-reiniciar" id="btnReiniciar">🔄 Jugar de nuevo</button>
+
+<script>
+  let contador = 0;
+  const totalSemillas = 10;
+  const semillasDiv = document.getElementById('semillas');
+  const contadorSpan = document.getElementById('contador');
+  const daruma = document.getElementById('daruma');
+  const zonaDrop = document.getElementById('zonaDrop');
+  const mensaje = document.getElementById('mensaje');
+  const victoria = document.getElementById('victoria');
+  const btnReiniciar = document.getElementById('btnReiniciar');
+
+  // Crear las 10 semillas
+  for (let i = 0; i < totalSemillas; i++) {
+    const semilla = document.createElement('div');
+    semilla.className = 'semilla';
+    semilla.textContent = '🌰';
+    semilla.draggable = true;
+    semilla.dataset.id = i;
+    
+    semilla.addEventListener('dragstart', (e) => {
+      if (semilla.classList.contains('comida')) {
+        e.preventDefault();
+        return;
+      }
+      e.dataTransfer.setData('text/plain', i);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    
+    // Clic como alternativa
+    semilla.addEventListener('click', () => {
+      if (!semilla.classList.contains('comida')) {
+        alimentar(semilla);
+      }
+    });
+    
+    semillasDiv.appendChild(semilla);
+  }
+
+  // Zona de drop - el círculo grande
+  zonaDrop.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    zonaDrop.classList.add('activo');
+  });
+  
+  zonaDrop.addEventListener('dragleave', (e) => {
+    // Solo quitar si realmente salimos del contenedor
+    if (!zonaDrop.contains(e.relatedTarget)) {
+      zonaDrop.classList.remove('activo');
+    }
+  });
+  
+  zonaDrop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zonaDrop.classList.remove('activo');
+    const id = e.dataTransfer.getData('text/plain');
+    const semilla = document.querySelector(`.semilla[data-id="${id}"]`);
+    if (semilla && !semilla.classList.contains('comida')) {
+      alimentar(semilla);
+    }
+  });
+
+  function alimentar(semilla) {
+    semilla.classList.add('comida');
+    contador++;
+    contadorSpan.textContent = contador;
+    
+    daruma.classList.remove('feliz');
+    daruma.classList.add('comiendo');
+    setTimeout(() => {
+      daruma.classList.remove('comiendo');
+    }, 600);
+    
+    if (contador < totalSemillas) {
+      const msgs = ['¡Ñam! 🌰','¡Rico! 😋','¡Más! 🤤','¡Delicioso! ✨','¡Otra! 🌟','¡Crece! 💪','¡Casi! 🎯','¡Ya! 🌸','¡Última! 🔥'];
+      mensaje.textContent = msgs[contador - 1] || '¡Sigue!';
+    }
+    
+    if (contador === totalSemillas) {
+      mensaje.textContent = '';
+      victoria.style.display = 'block';
+      btnReiniciar.style.display = 'inline-block';
+      daruma.classList.add('feliz');
+    }
+  }
+
+  btnReiniciar.addEventListener('click', () => {
+    contador = 0;
+    contadorSpan.textContent = 0;
+    victoria.style.display = 'none';
+    btnReiniciar.style.display = 'none';
+    daruma.classList.remove('feliz', 'comiendo');
+    mensaje.textContent = '¡Arrastra las semillas hacia el daruma!';
+    document.querySelectorAll('.semilla').forEach(s => s.classList.remove('comida'));
+  });
+</script>
+</body>
+</html>
