@@ -40,7 +40,7 @@
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
     animation: balanceo 2s ease-in-out infinite;
     user-select: none;
-    pointer-events: none; /* Evita que la imagen bloquee el arrastre */
+    pointer-events: none;
   }
   .daruma-img.comiendo { animation: comer 0.6s ease; }
   .daruma-img.feliz { animation: saltar 0.8s ease infinite; }
@@ -50,16 +50,36 @@
   @keyframes saltar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
   .semillas-container {
-    background: rgba(255,255,255,0.7); padding: 20px; border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; width: 100%;
+    background: rgba(255,255,255,0.7); 
+    padding: 15px; 
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    width: 100%; 
+    max-width: 360px; 
+    margin: 0 auto;
+    overflow: hidden; /* Evita que algo se salga */
   }
-  .semillas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .semillas { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 8px; 
+  }
   .semilla {
-    font-size: 2.5em; cursor: grab; transition: all 0.3s;
-    background: rgba(255,255,255,0.8); border-radius: 50%; padding: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 2px solid transparent;
+    font-size: 1.8em; 
+    cursor: grab; 
+    transition: all 0.3s;
+    background: rgba(255,255,255,0.9); 
+    border-radius: 50%; 
+    padding: 5px; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+    border: 2px solid transparent;
+    aspect-ratio: 1 / 1; /* Mantiene la forma de círculo perfecto */
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    line-height: 1; /* Alinea el emoji perfectamente */
   }
-  .semilla:hover { transform: scale(1.2); border-color: #ffd700; }
+  .semilla:hover { transform: scale(1.15); border-color: #ffd700; }
   .semilla.comida { opacity: 0.15; cursor: not-allowed; transform: scale(0.7); pointer-events: none; }
   
   .mensaje {
@@ -77,7 +97,7 @@
     margin-top: 15px; padding: 12px 30px; background: #c62828; color: white;
     border: none; border-radius: 25px; font-size: 1.1em; cursor: pointer; display: none;
   }
-  .instrucciones { background: rgba(255,255,255,0.7); padding: 10px 20px; border-radius: 15px; margin-bottom: 10px; color: #5e35b1; }
+  .instrucciones { background: rgba(255,255,255,0.7); padding: 10px 20px; border-radius: 15px; margin-bottom: 10px; color: #5e35b1; font-size: 0.95em;}
 </style>
 </head>
 <body>
@@ -86,7 +106,6 @@
   <div class="contador">Semillas: <span id="contador">0</span> / 10</div>
   
   <div class="daruma-container" id="zonaDrop">
-    <!-- Aquí va tu imagen del daruma -->
     <img src="tu-imagen.png" alt="Daruma" class="daruma-img" id="daruma">
   </div>
   
